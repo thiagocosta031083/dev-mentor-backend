@@ -79,4 +79,4 @@ Instruções de execução serão adicionadas conforme a implementação do proj
 Thiago Costa  
 Desenvolvedor Java | Angular  
 
-📎 LinkedIn: https://linkedin.com/in/seu-perfil
+📎 LinkedIn: https://www.linkedin.com/in/thiago-de-almeida-costa/
