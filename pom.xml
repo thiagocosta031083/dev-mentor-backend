@@ -38,12 +38,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!-- H2 (dev/local opcional) -->
+		    <dependency>
+		        <groupId>com.h2database</groupId>
+		        <artifactId>h2</artifactId>
+		        <scope>runtime</scope>
+		    </dependency>
 
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+		    <!-- PostgreSQL (Docker / Produção) -->
+		    <dependency>
+		        <groupId>org.postgresql</groupId>
+		        <artifactId>postgresql</artifactId>
+		        <scope>runtime</scope>
+		    </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
