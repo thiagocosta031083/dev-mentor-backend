@@ -32,18 +32,18 @@ public class RegistroEstudo {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "conteudo_id", nullable = false)
-    private Conteudo conteudo;
+    private ConteudoPlanejado conteudoPlanejado;
 
     protected RegistroEstudo() {
         // exigido pelo JPA
     }
 
-    public RegistroEstudo(LocalDate data, Integer tempoMinutos, TipoEstudo tipo, String observacoes, Conteudo conteudo) {
+    public RegistroEstudo(LocalDate data, Integer tempoMinutos, TipoEstudo tipo, String observacoes, ConteudoPlanejado conteudoPlanejado) {
         this.data = data;
         this.tempoMinutos = tempoMinutos;
         this.tipo = tipo;
         this.observacoes = observacoes;
-        this.conteudo = conteudo;
+        this.conteudoPlanejado = conteudoPlanejado;
     }
 
     public Long getId() {
@@ -66,7 +66,7 @@ public class RegistroEstudo {
         return observacoes;
     }
 
-    public Conteudo getConteudo() {
-        return conteudo;
+    public ConteudoPlanejado getConteudo() {
+        return conteudoPlanejado;
     }
 }

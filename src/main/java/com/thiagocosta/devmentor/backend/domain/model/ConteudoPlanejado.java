@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "conteudo")
-public class Conteudo {
+public class ConteudoPlanejado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,11 +35,11 @@ public class Conteudo {
     @JoinColumn(name = "tecnologia_id", nullable = false)
     private Tecnologia tecnologia;
 
-    protected Conteudo() {
+    protected ConteudoPlanejado() {
         // exigido pelo JPA
     }
 
-    public Conteudo(String titulo, String descricao, Tecnologia tecnologia) {
+    public ConteudoPlanejado(String titulo, String descricao, Tecnologia tecnologia) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.tecnologia = tecnologia;

@@ -30,17 +30,17 @@ public class PlanejamentoEstudo {
      */
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "conteudo_id", nullable = false, unique = true)
-    private Conteudo conteudo;
+    private ConteudoPlanejado conteudo;
 
     protected PlanejamentoEstudo() {
         // exigido pelo JPA
     }
 
-    public PlanejamentoEstudo(Double horasPlanejadas, LocalDate dataInicio, LocalDate dataFim, Conteudo conteudo) {
+    public PlanejamentoEstudo(Double horasPlanejadas, LocalDate dataInicio, LocalDate dataFim, ConteudoPlanejado conteudoPlanejado) {
         this.horasPlanejadas = horasPlanejadas;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
-        this.conteudo = conteudo;
+        this.conteudo = conteudoPlanejado;
     }
 
     public Long getId() {
@@ -59,7 +59,7 @@ public class PlanejamentoEstudo {
         return dataFim;
     }
 
-    public Conteudo getConteudo() {
+    public ConteudoPlanejado getConteudo() {
         return conteudo;
     }
 }
