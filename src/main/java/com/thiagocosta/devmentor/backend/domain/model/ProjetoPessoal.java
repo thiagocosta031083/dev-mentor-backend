@@ -32,6 +32,13 @@ public class ProjetoPessoal {
     @JoinColumn(name = "tecnologia_id")
     private Tecnologia tecnologia;
 
+    /**
+     * Usuário proprietário do projeto.
+     */
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     protected ProjetoPessoal() {
         // Construtor exigido pelo JPA
     }
@@ -40,12 +47,14 @@ public class ProjetoPessoal {
                           String stack,
                           StatusProjeto status,
                           String proximoPasso,
-                          Tecnologia tecnologia) {
+                          Tecnologia tecnologia,
+                          Usuario usuario) {
         this.nome = nome;
         this.stack = stack;
         this.status = status;
         this.proximoPasso = proximoPasso;
         this.tecnologia = tecnologia;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -70,5 +79,29 @@ public class ProjetoPessoal {
 
     public Tecnologia getTecnologia() {
         return tecnologia;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setStack(String stack) {
+        this.stack = stack;
+    }
+
+    public void setStatus(StatusProjeto status) {
+        this.status = status;
+    }
+
+    public void setProximoPasso(String proximoPasso) {
+        this.proximoPasso = proximoPasso;
+    }
+
+    public void setTecnologia(Tecnologia tecnologia) {
+        this.tecnologia = tecnologia;
     }
 }

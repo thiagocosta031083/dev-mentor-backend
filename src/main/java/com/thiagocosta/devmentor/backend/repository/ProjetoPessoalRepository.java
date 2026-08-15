@@ -13,4 +13,8 @@ public interface ProjetoPessoalRepository extends JpaRepository<ProjetoPessoal, 
     List<ProjetoPessoal> findByTecnologia(Tecnologia tecnologia);
 
     List<ProjetoPessoal> findByStatus(StatusProjeto status);
+
+    List<ProjetoPessoal> findByUsuarioId(Long usuarioId);
+
+    List<ProjetoPessoal> findByUsuarioIdAndStatus(Long usuarioId, StatusProjeto status);
 }

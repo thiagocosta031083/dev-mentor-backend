@@ -1,0 +1,50 @@
+{
+  "info": {
+    "name": "Dev Mentor API V1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Consultar health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('API esta UP', function () { pm.expect(pm.response.json().status).to.eql('UP'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    { "name": "Auth", "item": [] },
+    { "name": "Tecnologias", "item": [] },
+    { "name": "Conteudos", "item": [] },
+    { "name": "Planos", "item": [] },
+    { "name": "Registros", "item": [] },
+    { "name": "Dashboard", "item": [] },
+    { "name": "Projetos", "item": [] }
+  ]
+}

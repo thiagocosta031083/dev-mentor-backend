@@ -70,4 +70,20 @@ public class ConteudoPlanejado {
     public Tecnologia getTecnologia() {
         return tecnologia;
     }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setStatus(StatusConteudo status) {
+        this.status = status;
+    }
+
+    public void setNivelDominio(NivelDominio nivelDominio) {
+        this.nivelDominio = nivelDominio;
+    }
 }

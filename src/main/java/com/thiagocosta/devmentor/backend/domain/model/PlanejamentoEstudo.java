@@ -62,4 +62,16 @@ public class PlanejamentoEstudo {
     public ConteudoPlanejado getConteudo() {
         return conteudo;
     }
+
+    public void setHorasPlanejadas(Double horasPlanejadas) {
+        this.horasPlanejadas = horasPlanejadas;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
+    }
 }

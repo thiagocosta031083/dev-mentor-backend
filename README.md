@@ -68,9 +68,46 @@ Funcionalidades planejadas para a V1:
 
 ---
 
-## ▶️ Como Executar (em breve)
+## ▶️ Como executar
 
-Instruções de execução serão adicionadas conforme a implementação do projeto.
+### Desenvolvimento com H2
+
+Pré-requisitos: Java 8 ou superior e acesso à internet no primeiro build.
+
+No Windows:
+
+```powershell
+.\mvnw.cmd clean test
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
+```
+
+No Linux/macOS:
+
+```bash
+./mvnw clean test
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+Após iniciar a aplicação:
+
+- Health: `http://localhost:8080/api/v1/health`
+- Swagger: `http://localhost:8080/swagger-ui.html`
+- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+- Console H2: `http://localhost:8080/h2-console`
+
+### Produção com PostgreSQL
+
+O profile `prod` exige as variáveis `DB_URL`, `DB_USERNAME` e `DB_PASSWORD`. Nenhuma credencial real deve ser versionada.
+
+Para execução com Docker, copie `.env.example` para `.env`, substitua a senha e execute:
+
+```bash
+docker compose up -d --build
+```
+
+O PostgreSQL não é publicado no host. O backend escuta somente em `127.0.0.1:8080`, para ser exposto por um reverse proxy Nginx.
+
+Os modelos de publicação estão no diretório `deploy/` e a collection inicial do Postman está em `postman/`.
 
 ---
 

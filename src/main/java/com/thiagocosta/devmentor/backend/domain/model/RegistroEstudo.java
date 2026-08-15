@@ -69,4 +69,20 @@ public class RegistroEstudo {
     public ConteudoPlanejado getConteudo() {
         return conteudoPlanejado;
     }
+
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public void setTempoMinutos(Integer tempoMinutos) {
+        this.tempoMinutos = tempoMinutos;
+    }
+
+    public void setTipo(TipoEstudo tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
 }
