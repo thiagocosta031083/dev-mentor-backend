@@ -1,7 +1,7 @@
 package com.thiagocosta.devmentor.backend.dto.request;
 
 import com.thiagocosta.devmentor.backend.domain.enums.NivelDominio;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class ConcluirConteudoRequestDTO {
     @NotNull

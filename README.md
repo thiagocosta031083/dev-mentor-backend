@@ -16,15 +16,15 @@ A V1 está implementada localmente com:
 
 ## Stack
 
-- Java 8
-- Spring Boot 2.7.18
+- Java 25
+- Spring Boot 4.1.0 e Spring Framework 7
 - Spring Web, Data JPA, Security e Validation
 - JWT (JJWT), Flyway e Springdoc OpenAPI
-- H2 para desenvolvimento e PostgreSQL 14 para produção
+- H2 para desenvolvimento e PostgreSQL 18 para produção
 
 ## Executar localmente
 
-Pré-requisitos: Java 8+ e acesso à internet no primeiro build.
+Pré-requisitos: Java 25 e acesso à internet no primeiro build. O Maven Wrapper usa Maven 3.9.15.
 
 Windows:
 
@@ -90,6 +90,8 @@ cp .env.example .env
 # edite todos os valores e use senhas/chave JWT fortes
 docker compose up -d --build
 ```
+
+Ao atualizar uma instalação existente do PostgreSQL 14 para o 18, faça backup e migre os dados com `pg_upgrade` ou dump/restore antes de reutilizar o volume. O PostgreSQL 18 usa o novo volume em `/var/lib/postgresql`.
 
 O PostgreSQL fica apenas na rede interna e o backend é publicado em `127.0.0.1:8080`, pronto para o reverse proxy Nginx. Consulte [deploy/README.md](deploy/README.md).
 

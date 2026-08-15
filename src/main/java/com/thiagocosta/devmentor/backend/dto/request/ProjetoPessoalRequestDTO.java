@@ -1,7 +1,7 @@
 package com.thiagocosta.devmentor.backend.dto.request;
 
 import com.thiagocosta.devmentor.backend.domain.enums.StatusProjeto;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 public class ProjetoPessoalRequestDTO {
     @NotBlank @Size(max = 150) private String nome;

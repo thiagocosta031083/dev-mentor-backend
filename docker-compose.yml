@@ -1,13 +1,13 @@
 services:
   postgres:
-    image: postgres:14
+    image: postgres:18.4-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: devmentor
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d devmentor"]
       interval: 10s
