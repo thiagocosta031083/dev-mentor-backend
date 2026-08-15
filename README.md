@@ -103,6 +103,30 @@ O PostgreSQL fica apenas na rede interna e o backend é publicado em `127.0.0.1:
 
 Os testes validam o contexto, Flyway, health, OpenAPI, segurança JWT, fluxo completo dos recursos, regras do plano e fórmula de evolução. A mesma verificação roda no GitHub Actions.
 
+## Padrões de código
+
+O projeto usa EditorConfig para UTF-8, finais de linha LF, espaços em branco consistentes
+e indentação Java de 4 espaços. O Spotless 3.9.0 aplica `google-java-format` 1.36.0 no
+estilo AOSP, organiza imports, remove espaços finais e garante uma linha final. A etapa
+`spotless:check` também está vinculada à fase Maven `verify`.
+
+```bash
+# Formatar o Java
+./mvnw spotless:apply
+
+# Verificar formatação sem alterar arquivos
+./mvnw spotless:check
+
+# Executar testes e todas as verificações
+./mvnw clean verify
+```
+
+No IntelliJ IDEA, habilite EditorConfig em `Settings > Editor > Code Style`, use
+`Code > Reformat Code` para formatação básica e `Code > Optimize Imports` para imports.
+O resultado determinístico oficial é o gerado por `spotless:apply`; os comandos Maven
+podem ser executados pela janela Maven ou pelo terminal integrado. No VS Code, instale
+EditorConfig e o Extension Pack for Java; o Prettier não deve ser usado em arquivos Java.
+
 ## Recursos de apoio
 
 - Contrato resumido: [SWAGGER_API.md](SWAGGER_API.md)
