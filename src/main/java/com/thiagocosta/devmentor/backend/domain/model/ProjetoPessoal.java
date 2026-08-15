@@ -1,7 +1,6 @@
 package com.thiagocosta.devmentor.backend.domain.model;
 
 import com.thiagocosta.devmentor.backend.domain.enums.StatusProjeto;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -24,17 +23,12 @@ public class ProjetoPessoal {
     @Column(name = "proximo_passo", length = 300)
     private String proximoPasso;
 
-    /**
-     * Tecnologia relacionada é opcional.
-     * Serve apenas para direcionar os estudos.
-     */
+    /** Tecnologia relacionada é opcional. Serve apenas para direcionar os estudos. */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tecnologia_id")
     private Tecnologia tecnologia;
 
-    /**
-     * Usuário proprietário do projeto.
-     */
+    /** Usuário proprietário do projeto. */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
@@ -43,7 +37,8 @@ public class ProjetoPessoal {
         // Construtor exigido pelo JPA
     }
 
-    public ProjetoPessoal(String nome,
+    public ProjetoPessoal(
+            String nome,
             String stack,
             StatusProjeto status,
             String proximoPasso,

@@ -8,7 +8,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsuarioService {
     private final UsuarioRepository repository;
-    public UsuarioService(UsuarioRepository repository){this.repository=repository;}
-    public Usuario porEmail(String email){return repository.findByEmailIgnoreCase(email)
-            .orElseThrow(()->new ResourceNotFoundException("Usuário não encontrado"));}
+
+    public UsuarioService(UsuarioRepository repository) {
+        this.repository = repository;
+    }
+
+    public Usuario porEmail(String email) {
+        return repository
+                .findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+    }
 }

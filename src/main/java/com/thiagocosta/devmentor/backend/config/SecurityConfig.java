@@ -14,17 +14,42 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
-    private final JwtAuthenticationFilter jwt; private final RestAuthenticationEntryPoint entryPoint;
-    public SecurityConfig(JwtAuthenticationFilter jwt,RestAuthenticationEntryPoint entryPoint){this.jwt=jwt;this.entryPoint=entryPoint;}
-    @Bean SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
-        http.csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(entryPoint))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/health","/api/v1/auth/login","/swagger-ui.html","/swagger-ui/**","/v3/api-docs/**").permitAll()
-                        .anyRequest().authenticated());
-        http.addFilterBefore(jwt,UsernamePasswordAuthenticationFilter.class);return http.build();
+    private final JwtAuthenticationFilter jwt;
+    private final RestAuthenticationEntryPoint entryPoint;
+
+    public SecurityConfig(JwtAuthenticationFilter jwt, RestAuthenticationEntryPoint entryPoint) {
+        this.jwt = jwt;
+        this.entryPoint = entryPoint;
     }
-    @Bean PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
-    @Bean AuthenticationManager authenticationManager(AuthenticationConfiguration c)throws Exception{return c.getAuthenticationManager();}
+
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(entryPoint))
+                .authorizeHttpRequests(
+                        auth ->
+                                auth.requestMatchers(
+                                                "/api/v1/health",
+                                                "/api/v1/auth/login",
+                                                "/swagger-ui.html",
+                                                "/swagger-ui/**",
+                                                "/v3/api-docs/**")
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated());
+        http.addFilterBefore(jwt, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration c) throws Exception {
+        return c.getAuthenticationManager();
+    }
 }
