@@ -13,7 +13,7 @@ Este diretório contém modelos para publicar a API atrás do Nginx. Substitua o
 
 1. Clone o repositório na VM.
 2. Gere o JAR com `./mvnw clean package`.
-3. Copie `.env.example` para `.env` e configure uma senha forte.
+3. Copie `.env.example` para `.env` e configure usuário inicial, senhas fortes e uma chave JWT aleatória de pelo menos 32 bytes.
 4. Execute `docker compose up -d --build`.
 5. Na própria VM, valide `curl http://127.0.0.1:8080/api/v1/health`.
 

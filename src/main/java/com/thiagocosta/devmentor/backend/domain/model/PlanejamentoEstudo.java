@@ -6,72 +6,39 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "planejamento_estudo")
 public class PlanejamentoEstudo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    /**
-     * Quantas horas você planejou estudar nesse período.
-     * Ex: 10.5 horas.
-     */
-    @Column(name = "horas_planejadas", nullable = false)
-    private Double horasPlanejadas;
-
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tecnologia_id", nullable = false)
+    private Tecnologia tecnologia;
     @Column(name = "data_inicio", nullable = false)
     private LocalDate dataInicio;
-
     @Column(name = "data_fim", nullable = false)
     private LocalDate dataFim;
+    @Column(name = "horas_planejadas_totais", nullable = false)
+    private Double horasPlanejadasTotais;
+    @Column(name = "horas_semanais", nullable = false)
+    private Double horasSemanais;
+    @Column(length = 500)
+    private String observacao;
 
-    /**
-     * No MVP vamos manter simples: 1 planejamento por conteúdo.
-     * Se no futuro quiser vários planejamentos por conteúdo, trocamos para ManyToOne.
-     */
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "conteudo_id", nullable = false, unique = true)
-    private ConteudoPlanejado conteudo;
+    protected PlanejamentoEstudo() {}
 
-    protected PlanejamentoEstudo() {
-        // exigido pelo JPA
+    public PlanejamentoEstudo(Tecnologia tecnologia, LocalDate dataInicio, LocalDate dataFim,
+                              Double horasPlanejadasTotais, Double horasSemanais, String observacao) {
+        this.tecnologia = tecnologia; this.dataInicio = dataInicio; this.dataFim = dataFim;
+        this.horasPlanejadasTotais = horasPlanejadasTotais; this.horasSemanais = horasSemanais; this.observacao = observacao;
     }
 
-    public PlanejamentoEstudo(Double horasPlanejadas, LocalDate dataInicio, LocalDate dataFim, ConteudoPlanejado conteudoPlanejado) {
-        this.horasPlanejadas = horasPlanejadas;
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
-        this.conteudo = conteudoPlanejado;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Double getHorasPlanejadas() {
-        return horasPlanejadas;
-    }
-
-    public LocalDate getDataInicio() {
-        return dataInicio;
-    }
-
-    public LocalDate getDataFim() {
-        return dataFim;
-    }
-
-    public ConteudoPlanejado getConteudo() {
-        return conteudo;
-    }
-
-    public void setHorasPlanejadas(Double horasPlanejadas) {
-        this.horasPlanejadas = horasPlanejadas;
-    }
-
-    public void setDataInicio(LocalDate dataInicio) {
-        this.dataInicio = dataInicio;
-    }
-
-    public void setDataFim(LocalDate dataFim) {
-        this.dataFim = dataFim;
+    public Long getId() { return id; }
+    public Tecnologia getTecnologia() { return tecnologia; }
+    public LocalDate getDataInicio() { return dataInicio; }
+    public LocalDate getDataFim() { return dataFim; }
+    public Double getHorasPlanejadasTotais() { return horasPlanejadasTotais; }
+    public Double getHorasSemanais() { return horasSemanais; }
+    public String getObservacao() { return observacao; }
+    public void atualizar(LocalDate inicio, LocalDate fim, Double totais, Double semanais, String observacao) {
+        this.dataInicio = inicio; this.dataFim = fim; this.horasPlanejadasTotais = totais;
+        this.horasSemanais = semanais; this.observacao = observacao;
     }
 }

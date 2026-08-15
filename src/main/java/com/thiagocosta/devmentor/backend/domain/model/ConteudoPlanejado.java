@@ -1,89 +1,42 @@
 package com.thiagocosta.devmentor.backend.domain.model;
 
-import com.thiagocosta.devmentor.backend.domain.enums.NivelDominio;
-import com.thiagocosta.devmentor.backend.domain.enums.StatusConteudo;
-
+import com.thiagocosta.devmentor.backend.domain.enums.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "conteudo")
+@Table(name = "conteudo_planejado")
 public class ConteudoPlanejado {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 150)
-    private String titulo;
-
-    @Column(length = 500)
-    private String descricao;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
-    private StatusConteudo status;
-
-    /**
-     * Preenchido ao concluir (Nível de domínio 1..4).
-     * No MVP, pode ficar nulo enquanto não concluído.
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "nivel_dominio", length = 30)
-    private NivelDominio nivelDominio;
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "tecnologia_id", nullable = false)
     private Tecnologia tecnologia;
+    @Column(nullable = false, length = 150)
+    private String titulo;
+    @Enumerated(EnumType.STRING) @Column(nullable = false, length = 20)
+    private TipoConteudo tipo;
+    @Column(nullable = false)
+    private Integer peso;
+    @Enumerated(EnumType.STRING) @Column(nullable = false, length = 20)
+    private StatusConteudo status;
+    @Enumerated(EnumType.STRING) @Column(name = "nivel_dominio", length = 20)
+    private NivelDominio nivelDominio;
 
-    protected ConteudoPlanejado() {
-        // exigido pelo JPA
-    }
+    protected ConteudoPlanejado() {}
 
-    public ConteudoPlanejado(String titulo, String descricao, Tecnologia tecnologia) {
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.tecnologia = tecnologia;
+    public ConteudoPlanejado(Tecnologia tecnologia, String titulo, TipoConteudo tipo, Integer peso) {
+        this.tecnologia = tecnologia; this.titulo = titulo; this.tipo = tipo; this.peso = peso;
         this.status = StatusConteudo.NAO_INICIADO;
-        this.nivelDominio = null; // só ao concluir
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public StatusConteudo getStatus() {
-        return status;
-    }
-
-    public NivelDominio getNivelDominio() {
-        return nivelDominio;
-    }
-
-    public Tecnologia getTecnologia() {
-        return tecnologia;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public void setStatus(StatusConteudo status) {
-        this.status = status;
-    }
-
-    public void setNivelDominio(NivelDominio nivelDominio) {
-        this.nivelDominio = nivelDominio;
-    }
+    public Long getId() { return id; }
+    public Tecnologia getTecnologia() { return tecnologia; }
+    public String getTitulo() { return titulo; }
+    public TipoConteudo getTipo() { return tipo; }
+    public Integer getPeso() { return peso; }
+    public StatusConteudo getStatus() { return status; }
+    public NivelDominio getNivelDominio() { return nivelDominio; }
+    public void atualizar(String titulo, TipoConteudo tipo, Integer peso) { this.titulo = titulo; this.tipo = tipo; this.peso = peso; }
+    public void iniciar() { this.status = StatusConteudo.EM_ANDAMENTO; }
+    public void concluir(NivelDominio nivelDominio) { this.status = StatusConteudo.CONCLUIDO; this.nivelDominio = nivelDominio; }
 }

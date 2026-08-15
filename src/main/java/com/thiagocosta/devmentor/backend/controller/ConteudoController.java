@@ -1,118 +1,46 @@
 package com.thiagocosta.devmentor.backend.controller;
 
-import com.thiagocosta.devmentor.backend.domain.model.ConteudoPlanejado;
-import com.thiagocosta.devmentor.backend.domain.enums.NivelDominio;
-import com.thiagocosta.devmentor.backend.domain.enums.StatusConteudo;
+import com.thiagocosta.devmentor.backend.dto.request.*;
+import com.thiagocosta.devmentor.backend.dto.response.ConteudoResponseDTO;
 import com.thiagocosta.devmentor.backend.service.ConteudoService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/conteudos")
-@Tag(name = "Conteudos", description = "Endpoints para gestão de conteúdos planejados")
+@Tag(name = "Conteudos planejados")
 public class ConteudoController {
-
-    @Autowired
-    private ConteudoService conteudoService;
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Buscar conteúdo por ID")
-    @ApiResponse(responseCode = "200", description = "Conteúdo encontrado")
-    public ResponseEntity<ConteudoPlanejado> buscarPorId(@PathVariable Long id) {
-        return conteudoService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/tecnologia/{tecnologiaId}")
-    @Operation(summary = "Listar conteúdos de uma tecnologia")
-    @ApiResponse(responseCode = "200", description = "Lista de conteúdos")
-    public ResponseEntity<List<ConteudoPlanejado>> listarPorTecnologia(@PathVariable Long tecnologiaId) {
-        return ResponseEntity.ok(conteudoService.listarPorTecnologia(tecnologiaId));
-    }
-
-    @GetMapping("/tecnologia/{tecnologiaId}/status")
-    @Operation(summary = "Listar conteúdos por status")
-    @ApiResponse(responseCode = "200", description = "Lista de conteúdos")
-    public ResponseEntity<List<ConteudoPlanejado>> listarPorStatus(@PathVariable Long tecnologiaId, @RequestParam StatusConteudo status) {
-        return ResponseEntity.ok(conteudoService.listarPorTecnologiaEStatus(tecnologiaId, status));
-    }
+    private final ConteudoService service;
+    public ConteudoController(ConteudoService service) { this.service = service; }
 
     @PostMapping
-    @Operation(summary = "Criar novo conteúdo")
-    @ApiResponse(responseCode = "201", description = "Conteúdo criado com sucesso")
-    public ResponseEntity<ConteudoPlanejado> criar(@RequestParam Long tecnologiaId, @RequestParam String titulo, @RequestParam(required = false) String descricao) {
-        try {
-            ConteudoPlanejado conteudo = conteudoService.criar(tecnologiaId, titulo, descricao);
-            return ResponseEntity.status(HttpStatus.CREATED).body(conteudo);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<ConteudoResponseDTO> criar(@Valid @RequestBody ConteudoRequestDTO request, Principal principal) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ConteudoResponseDTO(service.criar(request, principal.getName())));
     }
-
+    @GetMapping("/{id}")
+    public ConteudoResponseDTO buscar(@PathVariable Long id, Principal principal) {
+        return new ConteudoResponseDTO(service.buscar(id, principal.getName()));
+    }
+    @GetMapping("/tecnologia/{tecnologiaId}")
+    public List<ConteudoResponseDTO> listar(@PathVariable Long tecnologiaId, Principal principal) {
+        return service.listar(tecnologiaId, principal.getName()).stream().map(ConteudoResponseDTO::new).collect(Collectors.toList());
+    }
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar conteúdo")
-    @ApiResponse(responseCode = "200", description = "Conteúdo atualizado")
-    public ResponseEntity<ConteudoPlanejado> atualizar(@PathVariable Long id, @RequestParam String titulo, @RequestParam(required = false) String descricao) {
-        try {
-            ConteudoPlanejado conteudo = conteudoService.atualizar(id, titulo, descricao);
-            return ResponseEntity.ok(conteudo);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ConteudoResponseDTO atualizar(@PathVariable Long id, @Valid @RequestBody ConteudoRequestDTO request, Principal principal) {
+        return new ConteudoResponseDTO(service.atualizar(id, request, principal.getName()));
     }
-
     @PutMapping("/{id}/iniciar")
-    @Operation(summary = "Iniciar um conteúdo")
-    @ApiResponse(responseCode = "200", description = "Conteúdo iniciado")
-    public ResponseEntity<ConteudoPlanejado> iniciar(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(conteudoService.iniciar(id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ConteudoResponseDTO iniciar(@PathVariable Long id, Principal principal) {
+        return new ConteudoResponseDTO(service.iniciar(id, principal.getName()));
     }
-
     @PutMapping("/{id}/concluir")
-    @Operation(summary = "Concluir um conteúdo com nível de domínio")
-    @ApiResponse(responseCode = "200", description = "Conteúdo concluído")
-    public ResponseEntity<ConteudoPlanejado> concluir(@PathVariable Long id, @RequestParam NivelDominio nivelDominio) {
-        try {
-            return ResponseEntity.ok(conteudoService.concluir(id, nivelDominio));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @GetMapping("/tecnologia/{tecnologiaId}/progresso")
-    @Operation(summary = "Calcular progresso de uma tecnologia")
-    @ApiResponse(responseCode = "200", description = "Progresso calculado")
-    public ResponseEntity<Map<String, Object>> calcularProgresso(@PathVariable Long tecnologiaId) {
-        try {
-            Double progresso = conteudoService.calcularProgressoTecnologia(tecnologiaId);
-            Map<String, Object> response = new HashMap<>();
-            response.put("progresso", progresso);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar conteúdo")
-    @ApiResponse(responseCode = "204", description = "Conteúdo deletado")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        conteudoService.deletar(id);
-        return ResponseEntity.noContent().build();
+    public ConteudoResponseDTO concluir(@PathVariable Long id, @Valid @RequestBody ConcluirConteudoRequestDTO request, Principal principal) {
+        return new ConteudoResponseDTO(service.concluir(id, request.getNivelDominio(), principal.getName()));
     }
 }

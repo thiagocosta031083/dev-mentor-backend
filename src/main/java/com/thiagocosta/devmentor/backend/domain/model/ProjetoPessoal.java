@@ -44,11 +44,11 @@ public class ProjetoPessoal {
     }
 
     public ProjetoPessoal(String nome,
-                          String stack,
-                          StatusProjeto status,
-                          String proximoPasso,
-                          Tecnologia tecnologia,
-                          Usuario usuario) {
+            String stack,
+            StatusProjeto status,
+            String proximoPasso,
+            Tecnologia tecnologia,
+            Usuario usuario) {
         this.nome = nome;
         this.stack = stack;
         this.status = status;

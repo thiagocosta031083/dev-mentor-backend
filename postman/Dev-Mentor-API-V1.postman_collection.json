@@ -1,50 +1,96 @@
 {
   "info": {
     "name": "Dev Mentor API V1",
+    "description": "Fluxo completo da V1. Execute Login primeiro; o token e os IDs são armazenados automaticamente.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
   "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:8080"
-    },
-    {
-      "key": "token",
-      "value": ""
-    }
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "email", "value": "thiago@devmentor.local" },
+    { "key": "senha", "value": "devmentor123" },
+    { "key": "token", "value": "" },
+    { "key": "tecnologiaId", "value": "" },
+    { "key": "conteudoId", "value": "" },
+    { "key": "planoId", "value": "" },
+    { "key": "registroId", "value": "" },
+    { "key": "projetoId", "value": "" }
   ],
   "item": [
     {
       "name": "Health",
+      "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/api/v1/health" },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('API UP', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().status).to.eql('UP'); });"] } }]
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "auth": { "type": "noauth" }, "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{email}}\",\n  \"senha\": \"{{senha}}\"\n}" },
+        "url": "{{baseUrl}}/api/v1/auth/login"
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Login realizado', () => pm.response.to.have.status(200));", "pm.collectionVariables.set('token', pm.response.json().token);"] } }]
+    },
+    {
+      "name": "Tecnologias",
       "item": [
         {
-          "name": "Consultar health",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/api/v1/health"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('API esta UP', function () { pm.expect(pm.response.json().status).to.eql('UP'); });"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ]
-        }
+          "name": "Criar tecnologia", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Java\",\n  \"tipo\": \"TECNOLOGIA\",\n  \"descricao\": \"Backend Java\",\n  \"cargaHorariaPlanejada\": 40\n}" }, "url": "{{baseUrl}}/api/v1/tecnologias" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Criada', () => pm.response.to.have.status(201));", "pm.collectionVariables.set('tecnologiaId', pm.response.json().id);"] } }]
+        },
+        { "name": "Listar tecnologias", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/tecnologias" } },
+        { "name": "Inativar tecnologia", "request": { "method": "PUT", "url": "{{baseUrl}}/api/v1/tecnologias/{{tecnologiaId}}/inativar" } },
+        { "name": "Ativar tecnologia", "request": { "method": "PUT", "url": "{{baseUrl}}/api/v1/tecnologias/{{tecnologiaId}}/ativar" } }
       ]
     },
-    { "name": "Auth", "item": [] },
-    { "name": "Tecnologias", "item": [] },
-    { "name": "Conteudos", "item": [] },
-    { "name": "Planos", "item": [] },
-    { "name": "Registros", "item": [] },
-    { "name": "Dashboard", "item": [] },
-    { "name": "Projetos", "item": [] }
+    {
+      "name": "Conteudos",
+      "item": [
+        {
+          "name": "Criar conteudo", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": { "mode": "raw", "raw": "{\n  \"tecnologiaId\": {{tecnologiaId}},\n  \"titulo\": \"Spring Boot\",\n  \"tipo\": \"PRATICA\",\n  \"peso\": 3\n}" }, "url": "{{baseUrl}}/api/v1/conteudos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Criado', () => pm.response.to.have.status(201));", "pm.collectionVariables.set('conteudoId', pm.response.json().id);"] } }]
+        },
+        { "name": "Listar por tecnologia", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/conteudos/tecnologia/{{tecnologiaId}}" } },
+        { "name": "Iniciar conteudo", "request": { "method": "PUT", "url": "{{baseUrl}}/api/v1/conteudos/{{conteudoId}}/iniciar" } },
+        { "name": "Concluir conteudo", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"nivelDominio\": \"NIVEL_4\" }" }, "url": "{{baseUrl}}/api/v1/conteudos/{{conteudoId}}/concluir" } }
+      ]
+    },
+    {
+      "name": "Planos",
+      "item": [
+        {
+          "name": "Criar plano", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": { "mode": "raw", "raw": "{\n  \"tecnologiaId\": {{tecnologiaId}},\n  \"dataInicio\": \"2026-08-01\",\n  \"dataFim\": \"2026-12-31\",\n  \"horasPlanejadasTotais\": 40,\n  \"horasSemanais\": 5,\n  \"observacao\": \"Plano Java\"\n}" }, "url": "{{baseUrl}}/api/v1/planos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Criado', () => pm.response.to.have.status(201));", "pm.collectionVariables.set('planoId', pm.response.json().id);"] } }]
+        },
+        { "name": "Listar por tecnologia", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/planos/tecnologia/{{tecnologiaId}}" } }
+      ]
+    },
+    {
+      "name": "Registros",
+      "item": [
+        {
+          "name": "Criar registro", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": { "mode": "raw", "raw": "{\n  \"tecnologiaId\": {{tecnologiaId}},\n  \"conteudoId\": {{conteudoId}},\n  \"data\": \"2026-08-15\",\n  \"tipo\": \"PRATICA\",\n  \"tempoMinutos\": 120,\n  \"observacoes\": \"API REST\"\n}" }, "url": "{{baseUrl}}/api/v1/registros" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Criado', () => pm.response.to.have.status(201));", "pm.collectionVariables.set('registroId', pm.response.json().id);"] } }]
+        },
+        { "name": "Listar por tecnologia", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/registros/tecnologia/{{tecnologiaId}}" } }
+      ]
+    },
+    { "name": "Dashboard", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/dashboard/{{tecnologiaId}}" } },
+    {
+      "name": "Projetos",
+      "item": [
+        {
+          "name": "Criar projeto", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Dev Mentor\",\n  \"stack\": \"Java, Spring Boot, PostgreSQL\",\n  \"status\": \"EM_ANDAMENTO\",\n  \"proximoPasso\": \"Publicar API\",\n  \"tecnologiaId\": {{tecnologiaId}}\n}" }, "url": "{{baseUrl}}/api/v1/projetos" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Criado', () => pm.response.to.have.status(201));", "pm.collectionVariables.set('projetoId', pm.response.json().id);"] } }]
+        },
+        { "name": "Listar projetos", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/projetos" } }
+      ]
+    }
   ]
 }

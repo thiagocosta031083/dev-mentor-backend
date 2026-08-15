@@ -27,6 +27,11 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/devmentor
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+      APP_USER_NAME: ${APP_USER_NAME}
+      APP_USER_EMAIL: ${APP_USER_EMAIL}
+      APP_USER_PASSWORD: ${APP_USER_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MILLIS: ${JWT_EXPIRATION_MILLIS:-3600000}
     ports:
       - "127.0.0.1:8080:8080"
     networks:
