@@ -1,7 +1,7 @@
 package com.thiagocosta.devmentor.backend.domain.model;
 
 import com.thiagocosta.devmentor.backend.domain.enums.*;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "conteudo_planejado")

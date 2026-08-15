@@ -1,6 +1,6 @@
 package com.thiagocosta.devmentor.backend.dto.request;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 public class PlanoEstudoRequestDTO {

@@ -1,7 +1,7 @@
 package com.thiagocosta.devmentor.backend.dto.request;
 
 import com.thiagocosta.devmentor.backend.domain.enums.TipoEstudo;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 public class RegistroEstudoRequestDTO {

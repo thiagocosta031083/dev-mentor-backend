@@ -1,7 +1,7 @@
 package com.thiagocosta.devmentor.backend.domain.model;
 
 import com.thiagocosta.devmentor.backend.domain.enums.TipoEstudo;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity

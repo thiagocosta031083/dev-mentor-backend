@@ -1,12 +1,12 @@
 package com.thiagocosta.devmentor.backend.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.thiagocosta.devmentor.backend.dto.response.ErrorResponseDTO;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import javax.servlet.http.*;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 
 @Component

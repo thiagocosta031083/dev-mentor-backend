@@ -2,7 +2,7 @@ package com.thiagocosta.devmentor.backend.domain.model;
 
 import com.thiagocosta.devmentor.backend.domain.enums.StatusTecnologia;
 import com.thiagocosta.devmentor.backend.domain.enums.TipoTecnologia;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tecnologia")
