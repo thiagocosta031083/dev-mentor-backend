@@ -1,82 +1,108 @@
-# Dev Mentor – Backend
+# Dev Mentor Backend V1
 
-Backend do sistema **Dev Mentor**, responsável pelas regras de negócio, cálculos de evolução técnica e exposição da API REST.
+API REST para organizar tecnologias, conteúdos, planos, registros de estudo e projetos pessoais, com um dashboard objetivo de evolução técnica.
 
-O sistema foi projetado para ajudar desenvolvedores juniores a planejar estudos, registrar aprendizados e acompanhar sua evolução técnica ao longo do tempo.
+## Estado da V1
 
----
+A V1 está implementada localmente com:
 
-## 📌 Contexto
+- autenticação stateless por JWT e usuário único persistido;
+- DTOs, Bean Validation e respostas de erro padronizadas;
+- tecnologias/disciplinas, conteúdos, planos, registros e projetos;
+- níveis de domínio de 1 a 4;
+- dashboard com cobertura, esforço, prática ponderada e comparação com o progresso esperado;
+- H2 no profile `dev`, PostgreSQL no profile `prod` e migrations Flyway;
+- Swagger/OpenAPI, collection Postman, Docker Compose, Nginx e CI.
 
-Desenvolvedores iniciantes costumam estudar várias tecnologias simultaneamente, mas enfrentam dificuldades para mensurar seu progresso real.
-
-O Dev Mentor resolve esse problema ao combinar:
-- Planejamento de conteúdos
-- Planejamento de horas de estudo
-- Registro de estudos realizados
-- Avaliação de nível de domínio técnico
-- Cálculo de evolução com base em métricas objetivas
-
----
-
-## 🎯 Responsabilidades do Backend
-
-- Gerenciar tecnologias e disciplinas
-- Gerenciar conteúdos planejados
-- Registrar estudos realizados
-- Calcular indicadores de evolução técnica
-- Expor endpoints REST para consumo pelo frontend
-
----
-
-## 🛠️ Stack Utilizada
+## Stack
 
 - Java 8
-- Spring Boot
-- Spring Data JPA
-- H2 Database (desenvolvimento)
-- PostgreSQL (produção)
-- JWT (autenticação simples)
+- Spring Boot 2.7.18
+- Spring Web, Data JPA, Security e Validation
+- JWT (JJWT), Flyway e Springdoc OpenAPI
+- H2 para desenvolvimento e PostgreSQL 14 para produção
 
----
+## Executar localmente
 
-## 🏗️ Arquitetura
+Pré-requisitos: Java 8+ e acesso à internet no primeiro build.
 
-O backend segue uma arquitetura em camadas:
+Windows:
 
-- Controller: exposição da API REST
-- Service: regras de negócio e cálculos de evolução
-- Repository: persistência de dados
-- Domain: entidades e modelos
+```powershell
+.\mvnw.cmd clean test
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"
+```
 
-Toda a lógica de cálculo da evolução técnica está centralizada na camada de serviço.
+Linux/macOS:
 
----
+```bash
+./mvnw clean test
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
 
-## 🚧 Status do Projeto
+No profile `dev`, o usuário inicial é:
 
-🛠️ MVP V1 em desenvolvimento
+- e-mail: `thiago@devmentor.local`
+- senha: `devmentor123`
 
-Funcionalidades planejadas para a V1:
-- Cadastro de tecnologias e disciplinas
-- Planejamento de conteúdos
-- Planejamento de horas de estudo
-- Registro de estudos
-- Avaliação de nível de domínio (1 a 4)
-- Cálculo automático de evolução técnica
-- Dashboard de acompanhamento (via frontend)
+Essas credenciais são somente locais. O profile de produção exige credenciais via ambiente.
 
----
+Serviços locais:
 
-## ▶️ Como Executar (em breve)
+- Health: `http://localhost:8080/api/v1/health`
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 
-Instruções de execução serão adicionadas conforme a implementação do projeto.
+## Autenticação
 
----
+Faça `POST /api/v1/auth/login`:
 
-## 👨‍💻 Autor
+```json
+{
+  "email": "thiago@devmentor.local",
+  "senha": "devmentor123"
+}
+```
 
-Thiago Costa  
-Desenvolvedor Java | Angular  
+Envie o token retornado nas demais requisições:
 
-📎 LinkedIn: https://www.linkedin.com/in/thiago-de-almeida-costa/
+```text
+Authorization: Bearer SEU_TOKEN
+```
+
+Health, login e documentação OpenAPI são públicos. Todos os demais endpoints exigem JWT.
+
+## Cálculo da evolução
+
+```text
+cobertura = conteúdos concluídos / conteúdos planejados * 100
+esforço = min(horas realizadas / horas planejadas * 100, 100)
+prática = média do nível (1..4 convertido para percentual), ponderada pelo peso
+evolução = cobertura * 0,40 + esforço * 0,30 + prática * 0,30
+```
+
+O resultado é comparado ao percentual temporal do plano ativo. Uma tolerância de 5 pontos classifica a evolução como `ABAIXO_DO_ESPERADO`, `DENTRO_DO_ESPERADO` ou `ACIMA_DO_ESPERADO`.
+
+## Produção com Docker
+
+```bash
+cp .env.example .env
+# edite todos os valores e use senhas/chave JWT fortes
+docker compose up -d --build
+```
+
+O PostgreSQL fica apenas na rede interna e o backend é publicado em `127.0.0.1:8080`, pronto para o reverse proxy Nginx. Consulte [deploy/README.md](deploy/README.md).
+
+## Qualidade
+
+```bash
+./mvnw clean verify
+```
+
+Os testes validam o contexto, Flyway, health, OpenAPI, segurança JWT, fluxo completo dos recursos, regras do plano e fórmula de evolução. A mesma verificação roda no GitHub Actions.
+
+## Recursos de apoio
+
+- Contrato resumido: [SWAGGER_API.md](SWAGGER_API.md)
+- Collection: [postman/Dev-Mentor-API-V1.postman_collection.json](postman/Dev-Mentor-API-V1.postman_collection.json)
+- Deploy: [deploy/README.md](deploy/README.md)
