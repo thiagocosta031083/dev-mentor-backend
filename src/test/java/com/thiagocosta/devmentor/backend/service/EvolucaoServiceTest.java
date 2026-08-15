@@ -1,16 +1,15 @@
 package com.thiagocosta.devmentor.backend.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 import com.thiagocosta.devmentor.backend.domain.enums.*;
 import com.thiagocosta.devmentor.backend.domain.model.*;
 import com.thiagocosta.devmentor.backend.dto.response.DashboardResponseDTO;
 import com.thiagocosta.devmentor.backend.repository.*;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
 
 class EvolucaoServiceTest {
     private static final LocalDate HOJE = LocalDate.of(2026, 8, 15);
@@ -54,8 +53,10 @@ class EvolucaoServiceTest {
     @Test
     void deveLimitarEsforcoEmCemEPonderarDominiosUmEQuatro() {
         Fixture f = new Fixture();
-        f.conteudos(Arrays.asList(f.conteudo("A", 1, NivelDominio.NIVEL_1),
-                f.conteudo("B", 3, NivelDominio.NIVEL_4)));
+        f.conteudos(
+                Arrays.asList(
+                        f.conteudo("A", 1, NivelDominio.NIVEL_1),
+                        f.conteudo("B", 3, NivelDominio.NIVEL_4)));
         f.plano(10.0, 50.0);
         f.minutos(1200L);
         DashboardResponseDTO resultado = f.calcular();
@@ -68,8 +69,10 @@ class EvolucaoServiceTest {
 
     private static class Fixture {
         private final TecnologiaService tecnologias = mock(TecnologiaService.class);
-        private final ConteudoPlanejadoRepository conteudos = mock(ConteudoPlanejadoRepository.class);
-        private final PlanejamentoEstudoRepository planos = mock(PlanejamentoEstudoRepository.class);
+        private final ConteudoPlanejadoRepository conteudos =
+                mock(ConteudoPlanejadoRepository.class);
+        private final PlanejamentoEstudoRepository planos =
+                mock(PlanejamentoEstudoRepository.class);
         private final RegistroEstudoRepository registros = mock(RegistroEstudoRepository.class);
         private final PlanoEstudoService planoService = mock(PlanoEstudoService.class);
         private final Tecnologia tecnologia;
@@ -78,13 +81,15 @@ class EvolucaoServiceTest {
             Usuario usuario = new Usuario("Teste", "teste@email.com", "hash");
             tecnologia = new Tecnologia("Java", TipoTecnologia.TECNOLOGIA, null, 10.0, usuario);
             when(tecnologias.buscar(1L, "teste@email.com")).thenReturn(tecnologia);
-            when(conteudos.findAllByTecnologiaIdOrderByIdAsc(1L)).thenReturn(Collections.emptyList());
+            when(conteudos.findAllByTecnologiaIdOrderByIdAsc(1L))
+                    .thenReturn(Collections.emptyList());
             when(planos.findAtivoByTecnologiaId(1L, HOJE)).thenReturn(Optional.empty());
             when(registros.somarMinutosPorTecnologia(1L)).thenReturn(0L);
         }
 
         private ConteudoPlanejado conteudo(String titulo, int peso, NivelDominio nivel) {
-            ConteudoPlanejado conteudo = new ConteudoPlanejado(tecnologia, titulo, TipoConteudo.PRATICA, peso);
+            ConteudoPlanejado conteudo =
+                    new ConteudoPlanejado(tecnologia, titulo, TipoConteudo.PRATICA, peso);
             if (nivel != null) conteudo.concluir(nivel);
             return conteudo;
         }
@@ -94,7 +99,9 @@ class EvolucaoServiceTest {
         }
 
         private void plano(double horas, double esperado) {
-            PlanejamentoEstudo plano = new PlanejamentoEstudo(tecnologia, HOJE.minusDays(1), HOJE.plusDays(1), horas, 5.0, null);
+            PlanejamentoEstudo plano =
+                    new PlanejamentoEstudo(
+                            tecnologia, HOJE.minusDays(1), HOJE.plusDays(1), horas, 5.0, null);
             when(planos.findAtivoByTecnologiaId(1L, HOJE)).thenReturn(Optional.of(plano));
             when(planoService.percentualEsperado(plano, HOJE)).thenReturn(esperado);
         }

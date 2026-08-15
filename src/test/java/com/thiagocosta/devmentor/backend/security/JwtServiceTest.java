@@ -1,9 +1,9 @@
 package com.thiagocosta.devmentor.backend.security;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class JwtServiceTest {
     private static final String SECRET = "test-secret-key-with-at-least-thirty-two-bytes";
